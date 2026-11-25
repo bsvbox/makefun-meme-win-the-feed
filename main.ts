@@ -34,6 +34,14 @@ if (standard) {
   throw new Error("POST.json url is not an X status URL");
 }
 
+// The placeholder id below is the dummy URL the repository ships with
+// before the live post exists. Refuse it loudly so a submission can
+// never go out with a fake post address.
+const statusId = cleanUrl.split("/status/")[1];
+if (statusId === "1000000000000000000") {
+  throw new Error("POST.json still has the placeholder URL");
+}
+
 mkdirSync(outDir, { recursive: true });
 const outPath = join(outDir, "POST.json");
 writeFileSync(outPath, JSON.stringify({ url: cleanUrl }, null, 2) + "\n");
